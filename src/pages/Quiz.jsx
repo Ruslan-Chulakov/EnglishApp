@@ -10,7 +10,11 @@ export const Quiz = ({ words }) => {
 
     return (
         <div>
-            <button onClick={handleStartQuiz}>button</button>
+            {!start ? (
+                <button onClick={handleStartQuiz}>Start quiz</button>
+            ) : (
+                <button onClick={handleStartQuiz}>Stop quiz</button>
+            )}
             {start && <QuizComponent words={words} />}
         </div>
     );

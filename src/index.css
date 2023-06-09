@@ -13,3 +13,14 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.mobNavLinks {
+  color: black;
+  text-decoration: none;
+}
+
+.navLinks {
+  margin-right: 20px;
+  color: white;
+    text-decoration: none;
+}

@@ -15,7 +15,10 @@ import AdbIcon from '@mui/icons-material/Adb';
 import { Outlet } from 'react-router';
 import { NavLink } from 'react-router-dom';
 
-const pages = [{ title: 'Home', path: '/' }, { title: 'Quiz', path: '/quiz' }];
+const pages = [
+    { title: 'Home', path: '/' },
+    { title: 'Quiz', path: '/quiz' },
+];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 export const SharedLayout = () => {
@@ -102,7 +105,7 @@ export const SharedLayout = () => {
                                         key={page.title}
                                         onClick={handleCloseNavMenu}
                                     >
-                                        <NavLink to={page.path}>
+                                        <NavLink to={page.path} className="mobNavLinks">
                                             <Typography textAlign="center">
                                                 {page.title}
                                             </Typography>
@@ -142,6 +145,7 @@ export const SharedLayout = () => {
                                 <NavLink
                                     to={page.path}
                                     key={page.title}
+                                    className="navLinks"
                                     // onClick={handleCloseNavMenu}
                                     // sx={{
                                     //     my: 2,
