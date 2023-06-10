@@ -1,22 +1,36 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import shuffle from 'lodash.shuffle';
+import { useSelector } from 'react-redux';
+import { selectWords } from 'redux/selectors';
 
 const getRandomIntegetFromInterval = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-export const QuizComponent = ({ words }) => {
+export const QuizComponent = ({attemptsQuantity}) => {
+    const words = useSelector(selectWords);
     const [checkedWords, setCheckedWords] = useState(filteredWords(words));
     const [randomWord, setRandomWord] = useState(
         checkedWords[getRandomIntegetFromInterval(0, checkedWords.length - 1)]
     );
     const [correct, setCorrect] = useState(0);
     const [wrong, setWrong] = useState(0);
-    const [attempts, setAttempts] = useState(5);
+    const [attempts, setAttempts] = useState(attemptsQuantity);
 
     const variants = getVariants();
 
-    console.log(checkedWords)
+    useEffect(() => {
+        if (checkedWords.length) {
+            setRandomWord(
+                checkedWords[
+                getRandomIntegetFromInterval(0, checkedWords.length - 1)
+                ]
+            );
+        } else {
+            setRandomWord('');
+        }
+        
+    }, [checkedWords]);
 
     // const notUsibleNowButSetWarning = () => {
     //     setCheckedWords();
@@ -53,31 +67,32 @@ export const QuizComponent = ({ words }) => {
     }
 
     const handleVariant = e => {
-        const ansverId = e.target.value;
-        const trueAnsverId = randomWord.id;
+        const answerId = e.target.value;
+        const trueAnswerId = randomWord.id;
 
-        if (ansverId === trueAnsverId) {
-            setCheckedWords(checkedWords.filter(({ id }) => id !== ansverId));
+        if (answerId === trueAnswerId) {
+            setCheckedWords(checkedWords.filter(({ id }) => id !== answerId));
             setCorrect(correct + 1);
         } else {
             setWrong(wrong + 1);
         }
         setAttempts(attempts - 1);
-        setRandomWord(
-            checkedWords[
-                getRandomIntegetFromInterval(0, checkedWords.length - 1)
-            ]
-        );
+        // setRandomWord(
+        //     checkedWords[
+        //         getRandomIntegetFromInterval(0, checkedWords.length - 1)
+        //     ]
+        // );
     };
     
     const handleRefresh = () => {
-        setAttempts(5);
+        setAttempts(attemptsQuantity);
         setCorrect(0);
         setWrong(0)
     }
 
     return (
         <div>
+            
             {attempts !== 0 && (
                 <>
                     <h2>{randomWord.ukrWord}</h2>
@@ -87,7 +102,7 @@ export const QuizComponent = ({ words }) => {
 
             <p>{`вірних відповідей: ${correct} / помилок: ${wrong}`}</p>
 
-            {attempts !== 0 &&
+            {Boolean(checkedWords.length) && Boolean(attempts) &&
                 variants.map(({ engWord, id }) => (
                     <button
                         key={id}
