@@ -3,13 +3,16 @@ import { nanoid } from 'nanoid';
 import styled from '@emotion/styled';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import { addWord } from 'redux/operations';
+import { useDispatch } from 'react-redux';
 const Input = styled(TextField)`
     margin-bottom: 10px !important;
 `;
 
-const WordForm = ({ addWords }) => {
+const WordForm = () => {
     const [ukrWord, setUkrWord] = useState('');
     const [engWord, setEngWord] = useState('');
+    const dispatch = useDispatch();
 
     const handleChange = e => {
         const { name, value } = e.currentTarget;
@@ -33,7 +36,7 @@ const WordForm = ({ addWords }) => {
             engWord,
             checked: false,
         };
-        addWords(word);
+        dispatch(addWord(word));
         setUkrWord('');
         setEngWord('');
     };
