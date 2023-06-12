@@ -1,18 +1,23 @@
+import { useSelector } from 'react-redux';
 import WordsListItem from 'components/WordsListItem/WordsListItem';
-const WordsList = ({ words, deleteWord, editWord, checkWord }) => {
+import { selectWords } from 'Redux/selectors';
+
+const WordsList = ({ deleteWord, editWord, checkWord }) => {
+    const words = useSelector(selectWords);
+    
     return (
         <ul>
-            {words.map(({ id, ukrWord, engWord, checked }, index) => {
+            {words?.map(({ id, nativeWord, foreignWord, checked }, index) => {
                 return (
                     <WordsListItem
                         key={id}
                         id={id}
-                        ukrWord={ukrWord}
-                        engWord={engWord}
+                        checked={checked}
+                        nativeWord={nativeWord}
+                        foreignWord={foreignWord}
                         itemNumber={index + 1}
                         deleteWord={deleteWord}
                         editWord={editWord}
-                        checked={checked}
                         checkWord={checkWord}
                     />
                 );

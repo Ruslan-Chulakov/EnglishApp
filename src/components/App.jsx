@@ -1,17 +1,20 @@
-// import { useState } from 'react';
-
 import { useLocalStorage } from 'hooks/useLocalStaoreage';
 import { Routes, Route } from 'react-router';
+import { useEffect } from 'react';
 import { SharedLayout } from './sharedLayout/SharedLayout';
 import { Home } from 'pages/Home';
 import { Quiz } from 'pages/Quiz';
+import { useDispatch } from 'react-redux';
+import { fetchWords } from 'Redux/operations/operations';
 
-
-// import WordForm from './WordForm/WordForm';
-// import WordsList from './WordsList/WordsList';
 
 export const App = () => {
     const [words, setWords] = useLocalStorage('words', []);
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(fetchWords())
+    }, [dispatch])
 
     const addWords = word => {
         setWords(prevState => [word, ...prevState]);

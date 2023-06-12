@@ -1,30 +1,43 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import shuffle from 'lodash.shuffle';
+import { useDispatch } from 'react-redux';
 
 const getRandomIntegetFromInterval = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-export const QuizComponent = ({ words }) => {
-    const [checkedWords, setCheckedWords] = useState(filteredWords(words));
+export const QuizComponent = ({ words, filteredWords, attemptsQuantity }) => {
+    const dispatch = useDispatch()
+    const [checkedWords, setCheckedWords] = useState(filteredWords);
     const [randomWord, setRandomWord] = useState(
         checkedWords[getRandomIntegetFromInterval(0, checkedWords.length - 1)]
     );
     const [correct, setCorrect] = useState(0);
     const [wrong, setWrong] = useState(0);
-    const [attempts, setAttempts] = useState(5);
+    const [attempts, setAttempts] = useState(attemptsQuantity);
 
     const variants = getVariants();
+     
 
-    console.log(checkedWords)
+    useEffect(() => {
+        setRandomWord(
+            checkedWords[
+            getRandomIntegetFromInterval(0, checkedWords.length - 1)
+            ]
+        );
+    }, [dispatch, checkedWords]);
 
-    // const notUsibleNowButSetWarning = () => {
-    //     setCheckedWords();
-    //     setRandomWord();
-    // };
-    // console.log(notUsibleNowButSetWarning);
+    useEffect(() => {
+        if (attempts === 0) {
+            console.log('asddfasdf');
+            setCheckedWords(filterdWords(words));
+        }
+    },[attempts, words])
 
-    function filteredWords(words) {
+
+  
+
+    function filterdWords(words) {
         return words.filter(word => word.checked);
     }
 
@@ -63,15 +76,10 @@ export const QuizComponent = ({ words }) => {
             setWrong(wrong + 1);
         }
         setAttempts(attempts - 1);
-        setRandomWord(
-            checkedWords[
-                getRandomIntegetFromInterval(0, checkedWords.length - 1)
-            ]
-        );
     };
     
     const handleRefresh = () => {
-        setAttempts(5);
+        setAttempts(attemptsQuantity);
         setCorrect(0);
         setWrong(0)
     }
@@ -80,7 +88,7 @@ export const QuizComponent = ({ words }) => {
         <div>
             {attempts !== 0 && (
                 <>
-                    <h2>{randomWord.ukrWord}</h2>
+                    <h2>{randomWord.nativeWord}</h2>
                     <p>{`спроб: ${attempts}`}</p>
                 </>
             )}
@@ -88,14 +96,14 @@ export const QuizComponent = ({ words }) => {
             <p>{`вірних відповідей: ${correct} / помилок: ${wrong}`}</p>
 
             {attempts !== 0 &&
-                variants.map(({ engWord, id }) => (
+                variants.map(({ foreignWord, id }) => (
                     <button
                         key={id}
                         value={id}
                         onClick={handleVariant}
                         type="button"
                     >
-                        {engWord}
+                        {foreignWord}
                     </button>
                 ))}
             {attempts === 0 && (

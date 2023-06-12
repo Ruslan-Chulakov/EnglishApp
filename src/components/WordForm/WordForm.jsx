@@ -1,24 +1,28 @@
 import { useState } from 'react';
-import { nanoid } from 'nanoid';
+// import { nanoid } from 'nanoid';
 import styled from '@emotion/styled';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import { addWord } from 'Redux/operations/operations';
+import { useDispatch } from 'react-redux';
+
 const Input = styled(TextField)`
     margin-bottom: 10px !important;
 `;
 
-const WordForm = ({ addWords }) => {
-    const [ukrWord, setUkrWord] = useState('');
-    const [engWord, setEngWord] = useState('');
+const WordForm = () => {
+    const dispatch = useDispatch();
+    const [nativeWord, setNativeWord] = useState('');
+    const [foreignWord, setForeignWord] = useState('');
 
     const handleChange = e => {
         const { name, value } = e.currentTarget;
         switch (name) {
-            case 'ukrWord':
-                setUkrWord(value);
+            case 'nativeWord':
+                setNativeWord(value);
                 break;
-            case 'engWord':
-                setEngWord(value);
+            case 'foreignWord':
+                setForeignWord(value);
                 break;
             default:
                 break;
@@ -28,35 +32,44 @@ const WordForm = ({ addWords }) => {
     const handleSubmit = e => {
         e.preventDefault();
         const word = {
-            id: nanoid(),
-            ukrWord,
-            engWord,
+            nativeWord,
+            foreignWord,
             checked: false,
         };
-        addWords(word);
-        setUkrWord('');
-        setEngWord('');
+        dispatch(addWord(word));
+        setNativeWord('');
+        setForeignWord('');
     };
 
     return (
-        <form onSubmit={handleSubmit} style={{display: "flex", flexDirection: "column", margin: "20px auto", maxWidth: '360px'}}>
+        <form
+            onSubmit={handleSubmit}
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                margin: '20px auto',
+                maxWidth: '360px',
+            }}
+        >
             <Input
-                label="ukrainian"
+                label="native word"
                 variant="outlined"
                 type="text"
-                value={ukrWord}
-                name="ukrWord"
+                value={nativeWord}
+                name="nativeWord"
                 onChange={handleChange}
             />
             <Input
-                label="english"
+                label="foreign word"
                 variant="outlined"
                 type="text"
-                value={engWord}
-                name="engWord"
+                value={foreignWord}
+                name="foreignWord"
                 onChange={handleChange}
             />
-            <Button variant="contained" type="submit">add word</Button>
+            <Button variant="contained" type="submit">
+                add word
+            </Button>
         </form>
     );
 };
